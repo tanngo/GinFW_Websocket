@@ -2,7 +2,6 @@ package server
 
 import (
 	"log"
-	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -15,7 +14,8 @@ var upgraderRBMQ = websocket.Upgrader{
 }
 
 func ExecuteRabbitMQ() {
-	conn, err := amqp.Dial(os.Getenv("AMQP_URL"))
+	//conn, err := amqp.Dial(os.Getenv("AMQP_URL"))
+	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -26,7 +26,7 @@ func ExecuteRabbitMQ() {
 	}
 	defer ch.Close()
 	msgs, err := ch.Consume(
-		"notification_queue",
+		"testing",
 		"",
 		true,
 		false,

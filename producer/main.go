@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/streadway/amqp"
 )
@@ -38,20 +39,24 @@ func main() {
 	}
 
 	// publishing a message
-	err = channel.Publish(
-		"",        // exchange
-		"testing", // key
-		false,     // mandatory
-		false,     // immediate
-		amqp.Publishing{
-			ContentType: "text/plain",
-			Body:        []byte("Test Message"),
-		},
-	)
-	if err != nil {
-		panic(err)
+	for {
+		err = channel.Publish(
+			"",        // exchange
+			"testing", // key
+			false,     // mandatory
+			false,     // immediate
+			amqp.Publishing{
+				ContentType: "text/plain",
+				Body:        []byte("Test Message"),
+			},
+		)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println("Queue status:", queue)
+		fmt.Println("Successfully published message")
+		time.Sleep(time.Second)
 	}
 
-	fmt.Println("Queue status:", queue)
-	fmt.Println("Successfully published message")
 }
